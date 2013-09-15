@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="graphics.js"></script>
+
     <link rel="stylesheet" type="text/css" href="drawing.css">
 </head>
 
@@ -10,10 +11,11 @@
 <!--
 define the HTML canvas element that will hold the graphical output
 -->
-<canvas id="canvas" height="500" width="600"></canvas>
-
 <button id="start" onclick="start()">Start</button>
 <button id="stop" onclick="stop()">Stop</button>
+<div id="canvas_container">
+    <canvas id="canvas" height="500" width="600"></canvas>
+</div>
 
 <!--
 execute the JavaScript
