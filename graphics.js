@@ -2,7 +2,7 @@
 
 // constructor for 2D coordinate
 var Coord = function (x, y) {
-	return {x:x, y:y};
+	return {'x':x,'y':y};
 	};
 
 // constructor for color
@@ -10,14 +10,173 @@ var Color = function (red, green, blue) {
 	return {red: red, green: green, blue: blue};
 	};
 
+// constructor for square
+var Square = function (x,y,fill){
+	return {
+		x: x, //integer, the x position of the square
+		y: y, //integer, the y position of the square
+		fill: fill //boolean, whether the square is filled or not
+	};
+}
+
+var init = function(){
+	//create a board object
+	var board = {};
+	
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext('2d');
+	var width = canvas.width;
+	var height = canvas.height;
+	
+	filled_squares = [];
+	
+	var RADIUS = 10;
+	//initialize squares 
+	for (var i = 0; i < width; i +=RADIUS) {
+		board[i] = [];
+		for (var j = 0; j < height; j +=RADIUS) {
+			board[i].push(Square(i,j,false));
+		}
+	}
+	canvas.addEventListener('mousemove',function(evt){
+		var position = getMousePos(canvas,evt);
+		var x = Math.floor(position.x/10)*10;
+		var y = Math.floor(position.y/10)*10;
+		context.fillStyle = "#000000";
+		context.fillRect(x,y,10,10);
+		board[x][y/10].fill = true;
+	});
+	updateBoard(board);
+}
+
+// function that gets the mouse position on the canvas
+function getMousePos(canvas, evt) {
+	var rect = canvas.getBoundingClientRect();
+	return {
+	  x: evt.clientX - rect.left,
+	  y: evt.clientY - rect.top
+	};
+}
+
+function updateBoard(board) {
+	for (row in board) {
+		for (var i=0;i<50;i++) {
+			update(row,i,board);
+		}
+	}
+}
+
+function update(x,y,board) {
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext('2d');
+	var pad = Pad(canvas);
+	if (board[x][y].fill == true) {
+		if (countNeighbors(x,y,board)<2) {
+			board[x][y].fill = false;
+			context.fillStyle="#FFFFFF";
+			context.fillRect(x,y*10,10,10);
+			pad.draw_rectangle(Coord(x,y*10),10,10,0.5,Color(0,0,0));
+		}
+		else if (countNeighbors(x,y,board)>3) {
+			board[x][y].fill = false;
+			context.fillStyle="#FFFFFF";
+			context.fillRect(x,y*10,10,10);
+			pad.draw_rectangle(Coord(x,y*10),10,10,0.5,Color(0,0,0));
+		}
+	}
+	else{
+		if (countNeighbors(x,y,board)==3){
+			board[x][y].fill = true;
+			context.fillStyle="#000000";
+			context.fillRect(x,y*10,10,10);
+		}
+	}
+}
+
+function countNeighbors(x,y,board) {
+	var count = [];
+	x = parseInt(x);
+	y = parseInt(y);
+	if (x<=10 && y<=1) {
+		count.push(checkBottom(x,y,board),checkBottomRight(x,y,board),checkMidRight(x,y,board));
+	}
+	else if (x>=590 && y<=1) {
+		count.push(checkMidLeft(x,y,board),checkBottomLeft(x,y,board),checkBottom(x,y,board));
+	}
+	else if (x<=10 && y>=49) {
+		count.push(checkTop(x,y,board),checkTopRight(x,y,board),checkMidRight(x,y,board));
+	}
+	else if (x>=590 && y>=49) {
+		count.push(checkMidLeft(x,y,board),checkTopLeft(x,y,board),checkTop(x,y,board));
+	}
+	else if (x<=10) {
+		count.push(checkTop(x,y,board),checkTopRight(x,y,board),checkMidRight(x,y,board),checkBottom(x,y,board),checkBottomRight(x,y,board));
+	}
+	else if (y<=1) {
+		count.push(checkMidLeft(x,y,board),checkBottomLeft(x,y,board),checkBottom(x,y,board),checkBottomRight(x,y,board),checkMidRight(x,y,board));
+	}
+	else if (x>=590) {
+		count.push(checkTop(x,y,board),checkTopLeft(x,y,board),checkMidLeft(x,y,board),checkBottomLeft(x,y,board),checkBottom(x,y,board));
+	}
+	else if (y>=49) {
+		count.push(checkMidLeft(x,y,board),checkTopLeft(x,y,board),checkTop(x,y,board),checkTopRight(x,y,board),checkMidRight(x,y,board));
+	}
+	else{
+		count.push(checkTopLeft(x,y,board),checkTop(x,y,board),checkTopRight(x,y,board),checkMidLeft(x,y,board),checkMidRight(x,y,board),checkBottomLeft(x,y,board),checkBottom(x,y,board),checkBottomRight(x,y,board));
+	}
+	return eval(count.join('+'));
+}
+
+function checkMidLeft(x,y,board) {
+	if (board[x-10][y].fill == true) return 1;
+	return 0;
+}
+
+function checkTopLeft(x,y,board) {
+	if (board[x-10][y-1].fill==true) return 1;	
+	else return 0;
+}
+
+function checkBottomLeft(x,y,board) {
+	if (board[x-10][y+1].fill==true) return 1;
+	else return 0;
+}
+
+function checkTop(x,y,board) {
+	if (board[x][y-1].fill==true) return 1;
+	else return 0;
+}
+
+function checkBottom(x,y,board) {
+	if (board[x][y+1].fill==true) return 1;
+	else return 0;
+}
+
+function checkMidRight(x,y,board) {
+	if (board[x+10][y].fill==true) return 1;
+	else return 0;
+}
+
+function checkTopRight(x,y,board) {
+	if (board[x+10][y-1].fill==true) return 1;
+	else return 0;
+}
+
+function checkBottomRight(x,y,board) {
+	if (board[x+10][y+1].fill==true) return 1;
+	else return 0;
+}
+
+
 // an abstraction for drawing in a canvas
 var Pad = function (canvas) {
 	var DEFAULT_CIRCLE_RADIUS = 5;
-	var DEFAULT_LINE_WIDTH = 2;
+	var DEFAULT_LINE_WIDTH = 1;
 
 	var context = canvas.getContext('2d');
 	var width = canvas.width;
 	var height = canvas.height;
+	
 
 	// sets the line width for subsequent drawing
 	var apply_line_width = function (ctx, line_width) {
@@ -100,6 +259,6 @@ var Pad = function (canvas) {
 			},
 		get_height: function() {
 			return height;
-			}
+			},
 	}
 }
