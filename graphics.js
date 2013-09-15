@@ -37,7 +37,7 @@ var init = function(){
 			board[i].push(Square(i,j,false));
 		}
 	}
-	canvas.addEventListener('mousemove',function(evt){
+	canvas.addEventListener('click',function(evt){
 		var position = getMousePos(canvas,evt);
 		var x = Math.floor(position.x/10)*10;
 		var y = Math.floor(position.y/10)*10;
@@ -51,10 +51,13 @@ var begin;
 var start = function(){
 	begin = window.setInterval(function(){
 		updateBoard(board);
-	},500);
+	},100);
 }
 var stop = function(){
 	begin = window.clearInterval(begin);
+}
+var step = function(){
+	updateBoard(board);
 }
 // function that gets the mouse position on the canvas
 function getMousePos(canvas, evt) {
@@ -64,12 +67,27 @@ function getMousePos(canvas, evt) {
 	  y: evt.clientY - rect.top
 	};
 }
+
 // iterates through each square and calls the update function
 function updateBoard(board) {
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext('2d');
+	var pad = Pad(canvas);
+	var change = {'white':[],'black':[]};
 	for (row in board) {
 		for (var i=0;i<50;i++) {
-			update(row,i,board);
+			var ans = update(row,i,board);
+			if (ans) {
+				if (ans==1) change.white.push(Coord(row,i));
+				else change.black.push(Coord(row,i));
+			}
 		}
+	}
+	for (square in change.white) {
+		setWhite(change.white[square].x,change.white[square].y,context,pad);
+	}
+	for (square in change.black) {
+		setBlack(change.black[square].x,change.black[square].y,context,pad);
 	}
 }
 // counts the neighbor of the cell and applies Game of Life rules
@@ -78,58 +96,63 @@ function updateBoard(board) {
 // Any live cell with more than three live neighbours dies, as if by overcrowding.
 // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 function update(x,y,board) {
-	var canvas = document.getElementById('canvas');
-	var context = canvas.getContext('2d');
-	var pad = Pad(canvas);
+	var ans = 0;
 	if (board[x][y].fill == true) {
 		if (countNeighbors(x,y,board)<2) {
-			board[x][y].fill = false;
-			context.fillStyle="#FFFFFF";
-			context.fillRect(x,y*10,10,10);
-			pad.draw_rectangle(Coord(x,y*10),10,10,0.5,Color(0,0,0));
+			ans = 1; //fill white
 		}
 		else if (countNeighbors(x,y,board)>3) {
-			board[x][y].fill = false;
-			context.fillStyle="#FFFFFF";
-			context.fillRect(x,y*10,10,10);
-			pad.draw_rectangle(Coord(x,y*10),10,10,0.5,Color(0,0,0));
+			ans = 1;
 		}
 	}
 	else{
 		if (countNeighbors(x,y,board)==3){
-			board[x][y].fill = true;
-			context.fillStyle="#000000";
-			context.fillRect(x,y*10,10,10);
+			ans = 2; //fill black
 		}
 	}
+	return ans;
 }
+
+function setWhite(x,y,context,pad) {
+	board[x][y].fill = false;
+	context.fillStyle="#FFFFFF";
+	context.fillRect(x,y*10,10,10);
+	pad.draw_rectangle(Coord(x,y*10),10,10,0.5,Color(0,0,0));
+}
+
+function setBlack(x,y,context,pad) {
+	board[x][y].fill = true;
+	context.fillStyle="#000000";
+	context.fillRect(x,y*10,10,10);
+}
+
 // counts the number of filled squares adjacent to the current square
 function countNeighbors(x,y,board) {
 	var count = [];
 	x = parseInt(x);
 	y = parseInt(y);
-	if (x<=10 && y<=1) {
+	if (x==0 && y==0) {
 		count.push(checkBottom(x,y,board),checkBottomRight(x,y,board),checkMidRight(x,y,board));
 	}
-	else if (x>=590 && y<=1) {
+	else if (x==590 && y==0) {
 		count.push(checkMidLeft(x,y,board),checkBottomLeft(x,y,board),checkBottom(x,y,board));
 	}
-	else if (x<=10 && y>=49) {
+	else if (x==0 && y==49) {
 		count.push(checkTop(x,y,board),checkTopRight(x,y,board),checkMidRight(x,y,board));
 	}
-	else if (x>=590 && y>=49) {
+	else if (x==590 && y==49) {
 		count.push(checkMidLeft(x,y,board),checkTopLeft(x,y,board),checkTop(x,y,board));
 	}
-	else if (x<=10) {
+	else if (x==0) {
 		count.push(checkTop(x,y,board),checkTopRight(x,y,board),checkMidRight(x,y,board),checkBottom(x,y,board),checkBottomRight(x,y,board));
 	}
-	else if (y<=1) {
+	else if (y==0) {
 		count.push(checkMidLeft(x,y,board),checkBottomLeft(x,y,board),checkBottom(x,y,board),checkBottomRight(x,y,board),checkMidRight(x,y,board));
 	}
-	else if (x>=590) {
+	else if (x==590) {
 		count.push(checkTop(x,y,board),checkTopLeft(x,y,board),checkMidLeft(x,y,board),checkBottomLeft(x,y,board),checkBottom(x,y,board));
 	}
-	else if (y>=49) {
+	else if (y==49) {
 		count.push(checkMidLeft(x,y,board),checkTopLeft(x,y,board),checkTop(x,y,board),checkTopRight(x,y,board),checkMidRight(x,y,board));
 	}
 	else{
@@ -180,13 +203,7 @@ function checkBottomRight(x,y,board) {
 
 
 // an abstraction for drawing in a canvas
-var Pad = function (canvas) {
-	// set up canvas dimensions appropriately
-	canvas.style.width='100%';
-  	canvas.style.height='100%';
-  	canvas.width  = canvas.offsetWidth;
-  	canvas.height = canvas.offsetHeight;
-	
+var Pad = function (canvas) {	
 	var DEFAULT_CIRCLE_RADIUS = 5;
 	var DEFAULT_LINE_WIDTH = 1;
 

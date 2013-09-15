@@ -1,8 +1,16 @@
-canvas{
+#container{
+    
+}
+#canvas{
 position: absolute;
-left: 50px;
-top: 50px;
+float:left;
+left: 30px;
+top: 70px;
 bottom:50px;
 height:500px;
 width:600px
+}
+#controls{
+    float:right;
+    
 }
