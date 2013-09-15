@@ -37,15 +37,41 @@ var init = function(){
 			board[i].push(Square(i,j,false));
 		}
 	}
-	canvas.addEventListener('click',function(evt){
-		var position = getMousePos(canvas,evt);
-		var x = Math.floor(position.x/10)*10;
-		var y = Math.floor(position.y/10)*10;
-		context.fillStyle = "#000000";
-		context.fillRect(x,y,10,10);
-		board[x][y/10].fill = true;
-	});
+	canvas.addEventListener('click',OnClick,false);
 }
+
+///////////////////////////////////////////
+////////////Event Listeners////////////////
+///////////////////////////////////////////
+function MouseMove(evt) {
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext('2d');
+	var position = getMousePos(canvas,evt);
+	var x = Math.floor(position.x/10)*10;
+	var y = Math.floor(position.y/10)*10;
+	context.fillStyle = "#000000";
+	context.fillRect(x,y,10,10);
+	board[x][y/10].fill = true;
+}
+function OnClick(evt) {
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext('2d');
+	var position = getMousePos(canvas,evt);
+	var x = Math.floor(position.x/10)*10;
+	var y = Math.floor(position.y/10)*10;
+	context.fillStyle = "#000000";
+	context.fillRect(x,y,10,10);
+	board[x][y/10].fill = true;
+}
+function switchMouse() {
+	canvas.removeEventListener('click',OnClick,false);
+	canvas.addEventListener('mousemove',MouseMove,false);
+}
+function switchClick() {
+	canvas.removeEventListener('mousemove',MouseMove,false);
+	canvas.addEventListener('click',OnClick,false);
+}
+
 // function called by the start button
 var begin;
 var start = function(){
@@ -296,3 +322,14 @@ var Pad = function (canvas) {
 			},
 	}
 }
+
+////////////////////////////////
+//////Preloaded Examples////////
+////////////////////////////////
+function checkerboard() {
+	var canvas = document.getElementById('canvas');
+	var context = canvas.getContext('2d');
+	
+}
+
+

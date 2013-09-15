@@ -1,16 +1,33 @@
+body{
+    background-color: #F0DABA;
+}
 #container{
-    
+    position: absolute;
+    background-color: white;
+    border:5px solid #C7903F;
+    border-radius: 10px;
+    padding:20px;
+    top: 70px;
+    left:20px;
+    right:20px;
+    bottom:20px;
+    min-height: 480px;
+    min-width:850px;
 }
 #canvas{
-position: absolute;
-float:left;
-left: 30px;
-top: 70px;
-bottom:50px;
-height:500px;
-width:600px
+    position: absolute;
+    float:left;
+    left: 10px;
+    top: 10px;
+    bottom:10px;
+    height:500px;
+    width:600px
 }
 #controls{
+    position:absolute;
+    top:10px;
+    left:610px;
     float:right;
+    margin:10px;
     
 }
