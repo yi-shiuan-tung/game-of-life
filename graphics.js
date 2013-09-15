@@ -19,10 +19,9 @@ var Square = function (x,y,fill){
 	};
 }
 
+//create a board object
+var board = {};
 var init = function(){
-	//create a board object
-	var board = {};
-	
 	var canvas = document.getElementById('canvas');
 	var context = canvas.getContext('2d');
 	var width = canvas.width;
@@ -46,9 +45,17 @@ var init = function(){
 		context.fillRect(x,y,10,10);
 		board[x][y/10].fill = true;
 	});
-	updateBoard(board);
 }
-
+// function called by the start button
+var begin;
+var start = function(){
+	begin = window.setInterval(function(){
+		updateBoard(board);
+	},500);
+}
+var stop = function(){
+	begin = window.clearInterval(begin);
+}
 // function that gets the mouse position on the canvas
 function getMousePos(canvas, evt) {
 	var rect = canvas.getBoundingClientRect();
@@ -57,7 +64,7 @@ function getMousePos(canvas, evt) {
 	  y: evt.clientY - rect.top
 	};
 }
-
+// iterates through each square and calls the update function
 function updateBoard(board) {
 	for (row in board) {
 		for (var i=0;i<50;i++) {
@@ -65,7 +72,11 @@ function updateBoard(board) {
 		}
 	}
 }
-
+// counts the neighbor of the cell and applies Game of Life rules
+// Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+// Any live cell with two or three live neighbours lives on to the next generation.
+// Any live cell with more than three live neighbours dies, as if by overcrowding.
+// Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 function update(x,y,board) {
 	var canvas = document.getElementById('canvas');
 	var context = canvas.getContext('2d');
@@ -92,7 +103,7 @@ function update(x,y,board) {
 		}
 	}
 }
-
+// counts the number of filled squares adjacent to the current square
 function countNeighbors(x,y,board) {
 	var count = [];
 	x = parseInt(x);
