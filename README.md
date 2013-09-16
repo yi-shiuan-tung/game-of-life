@@ -8,10 +8,12 @@ Enjoy!
 
 BASIC STRUCTURE
 
+The code for the board is in board.js. 
+
 The board is an object where the keys are the rounded indices of the x axis and the value is a list of Square objects accessible by the indexes of y.
 X ranges from 0 to 590 while y ranges from 0 to 49. 
 For example, to get the square on the top right corner, you would call board[590][0], which would return a Square object. 
-Each square is an instance of Square where its arguments are x, y and fill (a boolean indicating whether a square is black or white). 
+Each grid on the board is an instance of Square where its arguments are x, y and fill (a boolean indicating whether a square is black or white). 
 The code works by checking the neighboring cells of each square and applying the rules of the game of life.
 
 TESTING STRATEGY
