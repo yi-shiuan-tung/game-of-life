@@ -23,6 +23,8 @@ The code works by checking the neighboring cells of each square and applying the
 
 TESTING STRATEGY
 
+*Added a test in qunit-board which tests functions in board.js
+
 1. getMousePos function returns the x and y position on the canvas. Tested this function by printing values onto the console and checking each edge and random values.
 
 2. By filling certain number of square initially, I called each of the checkTop, checkTopLeft... functions to see if they are returning the correct values. Checked border cases. An error is reached when a square does not exist.
