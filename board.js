@@ -1,13 +1,127 @@
-// constructor for square
+/**
+ * Constructor
+ * Square is an immutable object that represents each cell of the Game of Life
+ * x is an integer that indicates the row of the board
+ * y is an integer that indicates the column of the board
+ * fill is a boolean value that indicates whether a cell is filled or not
+ * all cells are defaulted to be unfilled; fill=false
+ * 
+ **/
 var Square = function (x,y,fill){
 	return {
-		x: x, //integer, the x position of the square
-		y: y, //integer, the y position of the square
-		fill: fill //boolean, whether the square is filled or not
+		x: x,
+		y: y,
+		fill: fill
 	};
 }
 
-//create a board object
+/**
+ * Constructor for a Board object
+ *
+ **/
+var Board = function(){
+	var that = Object.create(Board.prototype);
+	//board is a list of lists that contain Square objects
+	var board = []; 
+	var WIDTH = 600;
+	var HEIGHT = 500;
+	var RADIUS = 10;
+	/**
+	 *Initialize Square objects in the board
+	 **/
+	that.init = function(){
+		for (var i = 0; i < HEIGHT; i +=RADIUS) {
+			board[i] = [];
+			for (var j = 0; j < WIDTH; j +=RADIUS) {
+				board[i].push(Square(i,j,false));
+			}
+		}
+	};
+	
+	that.getSquare = function(x,y){
+		return board[x][y/10];
+	};
+
+	that.updateBoard = function(){
+		// iterates through each square and calls the update function
+		// change keeps track of squares that will be changed in the next round
+		var change = {'white':[],'black':[]};
+		for (row in board) {
+			for (var i=0;i<50;i++) {
+				var ans = that.update(row,i,board);
+				if (ans) {
+					if (ans==1) change.white.push(Square(row,i));
+					else change.black.push(Square(row,i));
+				}
+			}
+		}
+		for (square in change.white) {
+			setWhite(change.white[square].x,change.white[square].y);
+		}
+		for (square in change.black) {
+			setBlack(change.black[square].x,change.black[square].y);
+		}
+		return change;
+	};
+	
+	// counts the neighbor of the cell and applies Game of Life rules
+	// Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+	// Any live cell with two or three live neighbours lives on to the next generation.
+	// Any live cell with more than three live neighbours dies, as if by overcrowding.
+	// Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+	that.update = function(x,y,board) {
+		var ans = 0;
+		if (that.getSquare(x,y).fill == true) {
+			if (that.countNeighbors(x,y,board)<2) {
+				ans = 1; //fill white
+			}
+			else if (that.countNeighbors(x,y,board)>3) {
+				ans = 1;
+			}
+		}
+		else{
+			if (that.countNeighbors(x,y,board)==3){
+				ans = 2; //fill black
+			}
+		}
+		return ans;
+	};
+	
+	that.countNeighbors = function(x,y,board){
+		var count = 0;
+		for (var i=-10;i<=10;i+10){
+			for (var j=-10;j<=10;j+10){
+				if (inboard(i,j) && (i!=x && j!=y) ) {
+					if (that.getSquare(i,j).fill==true) {
+						count+=1;
+					}
+				}
+			}
+		}
+		return count;
+	};
+	
+	var setWhite = function(x,y) {
+		that.getSquare(x,y).fill = false;
+	}
+	
+	var setBlack = function(x,y) {
+		that.getSquare(x,y).fill = true;
+	}
+	
+	//checks whether the square at x, y is within the parameter of the board
+	var inboard = function(x,y){
+		return x>=0 && x<50 && y>=0 && y<59;
+	}
+	
+	Object.freeze(that);
+	return that;
+}
+
+Board.prototype = {};
+
+
+/**
 var board = {};
 var init = function(){
 	var canvas = document.getElementById('canvas');
@@ -39,7 +153,7 @@ function MouseMove(evt) {
 	var y = Math.floor(position.y/10)*10;
 	context.fillStyle = "#000000";
 	context.fillRect(x,y,10,10);
-	board[x][y/10].fill = true;
+	board[x/10][y/10].fill = true;
 }
 function OnClick(evt) {
 	var canvas = document.getElementById('canvas');
@@ -49,7 +163,7 @@ function OnClick(evt) {
 	var y = Math.floor(position.y/10)*10;
 	context.fillStyle = "#000000";
 	context.fillRect(x,y,10,10);
-	board[x][y/10].fill = true;
+	board[x/10][y/10].fill = true;
 }
 function switchMouse() {
 	canvas.removeEventListener('click',OnClick,false);
@@ -129,18 +243,6 @@ function update(x,y,board) {
 	return ans;
 }
 
-function setWhite(x,y,context,pad) {
-	board[x][y].fill = false;
-	context.fillStyle="#FFFFFF";
-	context.fillRect(x,y*10,10,10);
-	pad.draw_rectangle(Coord(x,y*10),10,10,0.5,Color(0,0,0));
-}
-
-function setBlack(x,y,context,pad) {
-	board[x][y].fill = true;
-	context.fillStyle="#000000";
-	context.fillRect(x,y*10,10,10);
-}
 
 // counts the number of filled squares adjacent to the current square
 function countNeighbors(x,y,board) {
@@ -216,3 +318,4 @@ function checkBottomRight(x,y,board) {
 	if (board[x+10][y+1].fill==true) return 1;
 	else return 0;
 }
+**/

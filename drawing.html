@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="graphics.js"></script>
-    <script src="board.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="drawing.css">
+    <script src="display.js"></script>
+    <script src="listeners.js"></script>
 </head>
 
 <body>
@@ -11,21 +12,18 @@
     <h1>&nbsp&nbsp&nbspYi-Shiuan's Game of Life</h1>
 </div>
 <div id="container">
-    <canvas id="canvas" height="500" width="600"></canvas>
+    <div id="board" height="500px" width="600px"></div>
     <div id="controls">
-        <button id="start" onclick="start()">Start</button>
-        <button id="stop" onclick="stop()">Stop</button>
-        <button id="step" onclick="step()">Step</button>
+        <div id=xpos style="display:none"></div>
+        <div id=ypos style="display:none"></div>
+        <button id="start">Start</button>
+        <button id="stop">Stop</button>
+        <button id="step">Step</button>
         <h2>Initial Condition Settings</h2>
-        <button id="mousemove" onclick="switchMouse()">Mouseover</button>
-        <button id="click" onclick="switchClick()">Click</button>
+        <button id="mousemove">Draw</button>
+        <button id="onclick">Click to Draw</button>
     </div>
 </div>
-
-<!--
-execute the JavaScript
--->
-<script src="basic_drawing.js"></script>
-
+<script src="board.js"></script>
 </body>
 </html>

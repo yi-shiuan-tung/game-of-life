@@ -1,6 +1,21 @@
 body{
     background-color: #F0DABA;
 }
+.square_off{
+    width: 10px;
+    height: 10px;
+    float:left;
+}
+.square_on{
+    width:10px;
+    height:10px;
+    float:left;
+    background-color: black;
+}
+.row{
+    width:600px;
+    height:10px;
+}
 #container{
     position: absolute;
     background-color: white;
@@ -11,17 +26,18 @@ body{
     left:20px;
     right:20px;
     bottom:20px;
-    min-height: 480px;
-    min-width:850px;
+    height: 480px;
+    width:850px;
 }
-#canvas{
+#board{
     position: absolute;
     float:left;
     left: 10px;
     top: 10px;
     bottom:10px;
     height:500px;
-    width:600px
+    width:600px;
+    border:1px solid black;
 }
 #controls{
     position:absolute;
