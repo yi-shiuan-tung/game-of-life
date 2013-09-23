@@ -1,6 +1,8 @@
 Project 1
 =====
 
+The color setting feature does not work at this moment.
+
 HOW TO USE
 
 To set initial conditions, you can click on the squares to color them. You have the options to hover or click to draw in the squares. If you made an error, you can erase by clicking on corresponding buttons.
