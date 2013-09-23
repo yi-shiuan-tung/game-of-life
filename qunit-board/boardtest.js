@@ -1,31 +1,47 @@
 test("testing board",function(){
-    //init assigns square objects to the board object
-    init();
-    var canvas = document.getElementById('canvas');
-    var context = canvas.getContext('2d');
-    var pad = Pad(canvas);
+    var board = Board();
+    board.init();
+    
     //set four squares to be black
-    setBlack(10,1,context,pad);
-    setBlack(10,2,context,pad);
-    setBlack(20,1,context,pad);
-    setBlack(20,2,context,pad);
+    board.setBlack(10,10);
+    board.setBlack(10,20);
+    board.setBlack(20,10);
+    board.setBlack(20,20);
     //Check whether the fill argument is changed
-    equal(board[10][1].fill,true);
-    equal(board[10][2].fill,true);
-    setWhite(10,2,context,pad);
-    equal(board[10][2].fill,false);
+    equal(board.getSquare(10,10).fill,true);
+    equal(board.getSquare(10,20).fill,true);
+    board.setWhite(10,20);
+    equal(board.getSquare(10,20).fill,false);
     //Check whether countNeighbors work
-    equal(countNeighbors(0,0,board),1);
-    equal(countNeighbors(10,2,board),3);
-    setBlack(0,1,context,pad);
-    setBlack(0,2,context,pad);
-    setBlack(0,3,context,pad);
-    equal(countNeighbors(10,2,board),6);
+    equal(board.countNeighbors(0,0),1);
+    equal(board.countNeighbors(10,20),3);
+    board.setBlack(0,10);
+    board.setBlack(0,20);
+    board.setBlack(0,30);
+    equal(board.countNeighbors(10,20),6);
     //check border cases
-    equal(countNeighbors(0,2,board),3);
-    setBlack(590,0,context,pad);
-    equal(countNeighbors(590,1,board),1);
-    setBlack(590,49,context,pad);
-    equal(countNeighbors(590,48,board),1);
+    equal(board.countNeighbors(0,20),3);
+    board.setBlack(490,0);
+    equal(board.countNeighbors(490,10),1);
+    board.setBlack(490,490);
+    equal(board.countNeighbors(490,480),1);
+    
+});
+
+test("test update",function(){
+    var board = Board();
+    board.init();
+    /**                 * *      gives you   * *       after one step
+     *                    *                  * *     
+     **/
+    board.setBlack(100,100);
+    board.setBlack(100,110);
+    board.setBlack(110,110);
+    
+    board.updateBoard();
+    equal(board.getSquare(110,100).fill,true);
+    equal(board.getSquare(100,100).fill,true);
+    equal(board.getSquare(100,110).fill,true);
+    equal(board.getSquare(110,110).fill,true);
     
 });

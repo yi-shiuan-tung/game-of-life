@@ -59,10 +59,10 @@ var Board = function(){
 			}
 		}
 		for (square in change.white) {
-			setWhite(change.white[square].x,change.white[square].y);
+			that.setWhite(change.white[square].x,change.white[square].y);
 		}
 		for (square in change.black) {
-			setBlack(change.black[square].x,change.black[square].y);
+			that.setBlack(change.black[square].x,change.black[square].y);
 		}
 		return change;
 	};
@@ -105,11 +105,11 @@ var Board = function(){
 		return count;
 	};
 	//sets a square to be unfilled, or white
-	var setWhite = function(x,y) {
+	that.setWhite = function(x,y) {
 		that.getSquare(x,y).fill = false;
 	}
 	//sets a square to be filled, or black
-	var setBlack = function(x,y) {
+	that.setBlack = function(x,y) {
 		that.getSquare(x,y).fill = true;
 	}
 	
