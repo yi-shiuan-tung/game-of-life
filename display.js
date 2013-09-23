@@ -1,3 +1,8 @@
+/**
+ * Constructor for display
+ * This deals with displaying the cells and coloring the cells
+ * Event listeners are set in this object
+ **/
 var Display = function(boardObject){
     var self = Object.create(Display.prototype);
     var RADIUS = 10;
@@ -26,13 +31,9 @@ var Display = function(boardObject){
         }
     }
     
-    self.changeBlack = function(x,y,size){
-        for (var i=-size;i<size;i++){
-            for (var j=-size;j<size;j++){
-                boardObject.getSquare(x+size,y).fill = true;
-                displayList[x/10].children[y/10].className = 'square_on';
-            }
-        }
+    self.changeBlack = function(x,y){
+        boardObject.getSquare(x,y).fill = true;
+        displayList[x/10].children[y/10].className = 'square_on';
     }
     
     self.changeWhite = function(x,y){
@@ -57,23 +58,14 @@ var Display = function(boardObject){
             y:$('#ypos').text()
         }
     }
-    
-    var MouseMove = function() {
+    //Event Listener function for coloring cells
+    var Color = function() {
         var pos = getMousePos();
         var x = parseInt(pos.x);
         var y = parseInt(pos.y);
-        boardObject.getSquare(x,y).fill = true;
         self.changeBlack(x,y);
     }
-    
-    var OnClick = function() {
-        var pos = getMousePos();
-        var x = parseInt(pos.x);
-        var y = parseInt(pos.y);
-        boardObject.getSquare(x,y).fill = true;
-        self.changeBlack(x,y);
-    }
-    
+    //Event Listener function for erasing cells
     var Erase = function(){
         var pos = getMousePos();
         var x = parseInt(pos.x);
@@ -81,31 +73,61 @@ var Display = function(boardObject){
         boardObject.getSquare(x,y).fill = false;
         self.changeWhite(x,y);
     }
-    
+    //On button click, the user can draw the board by mousemove
     var draw = $('#mousemove')[0];
     draw.onclick = function() {
+        display.removeEventListener('mousedown',Erase,false);
         display.removeEventListener('mousemove',Erase,false);
-        display.removeEventListener('mousedown',OnClick,false);
-        display.addEventListener('mousemove',MouseMove,false);
+        display.removeEventListener('mousedown',Color,false);
+        display.addEventListener('mousemove',Color,false);
     }
-    
+    //the user draws the board by clicking
     var click = $('#onclick')[0];
     click.onclick = function() {
+        display.removeEventListener('mousedown',Erase,false);
         display.removeEventListener('mousemove',Erase,false);
-        display.removeEventListener('mousemove',MouseMove,false);
-        display.addEventListener('mousedown',OnClick,false);
+        display.removeEventListener('mousemove',Color,false);
+        display.addEventListener('mousedown',Color,false);
     }
-    
-    var erase = $('#erase')[0];
-    erase.onclick = function(){
-        display.removeEventListener('mousedown',OnClick,false);
-        display.removeEventListener('mousemove',MouseMove,false);
+    //the user erases board by mousemove
+    var hovererase = $('#hovererase')[0];
+    hovererase.onclick = function(){
+        display.removeEventListener('mousedown',Color,false);
+        display.removeEventListener('mousemove',Color,false);
+        display.removeEventListener('mousedown',Erase,false);
         display.addEventListener('mousemove',Erase,false);
     }
+    //the user erases board by clicking
+    var clickerase = $('#clickerase')[0];
+    clickerase.onclick= function(){
+        display.removeEventListener('mousedown',Color,false);
+        display.removeEventListener('mousemove',Color,false);
+        display.removeEventListener('mousemove',Erase,false);
+        display.addEventListener('mousedown',Erase,false);
+    }
+    //Event Listener function that sets the color of the preview box
+    var ChangePreview = function(){
+        var preview = $('#preview')[0];
+        var r = $('#r').val();
+        var g = $('#g').val();
+        var b = $('#b').val();
+        preview.style.backgroundColor = "rgb("+r+","+g+","+b+")";
+    }
+    // Attaches event listeners to the three input boxes
+    var r = $('#r')[0];
+    var g = $('#g')[0];
+    var b = $('#b')[0];
+    r.addEventListener('change',ChangePreview,false);
+    g.addEventListener('change',ChangePreview,false);
+    b.addEventListener('change',ChangePreview,false);
     
-    //checks whether the square at x, y is within the parameter of the board
-    var inboard = function(x,y){
-        return x>=0 && x<HEIGHT && y>=0 && y<WIDTH;
+    var rgb = $('#submit')[0];
+    rgb.onclick = function(){
+        var r = $('#r').val();
+        var g = $('#g').val();
+        var b = $('#b').val();
+        var square_on = $('.square_on');
+        square_on.style.backgroundColor = "rgb("+r+","+g+","+b+")";
     }
     
     Object.freeze(self);

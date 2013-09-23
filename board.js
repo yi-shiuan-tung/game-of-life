@@ -89,9 +89,8 @@ var Board = function(){
 		}
 		return ans;
 	};
-	
+	//counts the number of neighboring cells that are filled
 	that.countNeighbors = function(x,y){
-		//console.log('original coordinate: '+x+' '+y);
 		var count = 0;
 		for (var i=-10;i<=10;i+=10){
 			for (var j=-10;j<=10;j+=10){
@@ -105,11 +104,11 @@ var Board = function(){
 		}
 		return count;
 	};
-	
+	//sets a square to be unfilled, or white
 	var setWhite = function(x,y) {
 		that.getSquare(x,y).fill = false;
 	}
-	
+	//sets a square to be filled, or black
 	var setBlack = function(x,y) {
 		that.getSquare(x,y).fill = true;
 	}
@@ -117,10 +116,6 @@ var Board = function(){
 	//checks whether the square at x, y is within the parameter of the board
 	var inboard = function(x,y){
 		return x>=0 && x<HEIGHT && y>=0 && y<WIDTH;
-	}
-	
-	that.test = function(){
-		console.log(inboard(500,0));
 	}
 	
 	Object.freeze(that);

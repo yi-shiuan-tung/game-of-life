@@ -1,6 +1,9 @@
 body{
     background-color: #F0DABA;
 }
+.rgb{
+    width:30px;
+}
 .square_off{
     width: 10px;
     height: 10px;
@@ -46,4 +49,13 @@ body{
     float:right;
     margin:10px;
     
+}
+#preview{
+    margin:10px;
+    height:30px;
+    width:30px;
+    background-color:black;
+}
+#submit{
+    margin-top:10px;
 }

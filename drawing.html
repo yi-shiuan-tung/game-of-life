@@ -19,14 +19,17 @@
         <button id="start">Start</button>
         <button id="stop">Stop</button>
         <button id="step">Step</button>
-        <h2>Choose Your Method</h2>
+        <h3>Choose Your Method</h3>
         <button id="mousemove">Hover to Draw</button>
         <button id="onclick">Click to Draw</button>
-        <button id="erase">Erase</button>
-        <h2>Change Cursor Size</h2>
-        <button id="small">Small</button>
-        <button id="medium">Medium</button>
-        <button id="large">Large</button>
+        <button id="hovererase">Hover to Erase</button>
+        <button id="clickerase">Click to Erase</button>
+        <h3>Change Color of Cell</h3>
+        <p>*Default color of live cells is black.</p>
+        RGB value: <input class="rgb" id="r" value="0"> <input class="rgb" id="g" value="0"> <input class="rgb" id="b" value="0">
+        </br>
+        <div id="preview"></div>
+        <input id="submit" type="submit" value="Set Color">
     </div>
 </div>
 <script src="board.js"></script>
