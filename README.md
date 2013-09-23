@@ -23,7 +23,5 @@ The drawing of the board is in display.js.
 
 The board is initialized by creating a row div element and appending individual square div elements to it. The board then appends enough row div elements  to fill up. Each individual square div elements can be accessed by the list displayList. By changing the className of the div elements, I can set it to be alive(black) or dead(white). 
 
-TESTING STRATEGY
-
 
 
